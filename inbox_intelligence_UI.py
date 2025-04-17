@@ -129,4 +129,38 @@ st.markdown("""
 st.markdown("<div class='main-title'>📧 Inbox Intelligence</div>", unsafe_allow_html=True)
 st.markdown("<div class='subtitle'>Smart Spam Detection powered by Naive Bayes</div>", unsafe_allow_html=True)
 
-# [The rest of the app logic remains unchanged]
+uploaded_file = st.file_uploader("📎 Browse Email File (TXT format only)", type=["txt"])
+st.markdown("---")
+
+email_input_disabled = uploaded_file is not None
+email_text = st.text_area("✉️ Paste your email content below:", height=200, disabled=email_input_disabled)
+
+if uploaded_file is not None:
+    email_text = uploaded_file.read().decode("utf-8")
+
+if st.button("🔍 Detect Spam"):
+    if not model or not vectorizer:
+        st.error("Model not loaded correctly. Please check the file and retry.")
+    elif not email_text.strip():
+        st.warning("Please enter or upload email content first.")
+    else:
+        with st.spinner("Analyzing the message..."):
+            time.sleep(1.2)
+            prediction = model.predict([email_text])[0]
+            proba = model.predict_proba([email_text])[0]
+            confidence = round(max(proba) * 100, 2)
+
+            result_label = "🚨 Spam Detected" if prediction == 1 else "✅ Not Spam"
+            label_class = "spam" if prediction == 1 else "not-spam"
+            caution = "<div class='caution-animated spam'>⚠️ Potential Spam Message</div>" if prediction == 1 else "<div class='caution-animated not-spam'>🟢 Safe Message</div>"
+
+            st.markdown(f"<h2 class='{label_class}'>{result_label}</h2>", unsafe_allow_html=True)
+            st.markdown(caution, unsafe_allow_html=True)
+
+            st.markdown("### Confidence Meter")
+            battery_color = "#FF4136" if prediction == 1 else "#4CAF50"
+            st.markdown(f"""
+                <div class="battery-container">
+                    <div class="battery-fill" style="width:{confidence}%; background:{battery_color}">{confidence}%</div>
+                </div>
+            """, unsafe_allow_html=True)
