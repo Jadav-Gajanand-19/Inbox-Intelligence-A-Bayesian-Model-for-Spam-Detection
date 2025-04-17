@@ -5,6 +5,7 @@ import time
 from PIL import Image
 import matplotlib.pyplot as plt
 import numpy as np
+import streamlit.components.v1 as components
 
 # Load the model and vectorizer
 MODEL_PATH = "inbox_intelligence_model.pkl"
@@ -34,22 +35,43 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("Developed with ❤️ using Naive Bayes and Streamlit.")
 
-# Header
+# Header with animation
 st.markdown("""
     <style>
     .main-title {
         font-size: 48px;
         font-weight: bold;
         color: #3b82f6;
+        animation: fadeIn 2s ease-in-out;
     }
     .subtitle {
         font-size: 20px;
         color: #555;
+        animation: fadeIn 3s ease-in-out;
     }
     .footer {
         margin-top: 50px;
         font-size: 14px;
         color: #999;
+        animation: fadeIn 4s ease-in-out;
+    }
+    .stButton button {
+        border: 2px solid #3b82f6;
+        background-color: white;
+        color: #3b82f6;
+        padding: 0.5em 1em;
+        font-size: 16px;
+        font-weight: bold;
+        transition: 0.3s ease;
+        border-radius: 8px;
+    }
+    .stButton button:hover {
+        background-color: #3b82f6;
+        color: white;
+    }
+    @keyframes fadeIn {
+        0% { opacity: 0; transform: translateY(-10px); }
+        100% { opacity: 1; transform: translateY(0); }
     }
     </style>
 """, unsafe_allow_html=True)
@@ -108,9 +130,19 @@ if check and email_text.strip():
             st.markdown("---")
             if prediction == 1:
                 st.error(f"🚨 This email is classified as **SPAM** with {confidence:.2f}% confidence.")
+                st.markdown("""
+                    <div style="animation: fadeIn 2s ease-in-out; font-size: 24px; color: #FF4136;">
+                        ⚠️ Be cautious of such messages!
+                    </div>
+                """, unsafe_allow_html=True)
                 st.balloons()
             else:
                 st.success(f"✅ This email is **NOT SPAM** with {confidence:.2f}% confidence.")
+                st.markdown("""
+                    <div style="animation: fadeIn 2s ease-in-out; font-size: 24px; color: #4CAF50;">
+                        🎉 Looks safe and clean!
+                    </div>
+                """, unsafe_allow_html=True)
                 st.snow()
 
             display_confidence_pie(confidence)
@@ -126,6 +158,7 @@ st.markdown("""
     Built with ❤️ by [Your Name]. This is a demo of spam detection using machine learning.
     </div>
 """, unsafe_allow_html=True)
+
 
     
 
