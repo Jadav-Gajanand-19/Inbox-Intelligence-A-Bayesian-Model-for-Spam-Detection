@@ -75,17 +75,33 @@ st.markdown("""
         50% { transform: scale(1.1); opacity: 0.8; }
         100% { transform: scale(1); opacity: 1; }
     }
-    .confidence-animated {
-        font-size: 20px;
+    @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0; }
+    }
+    .battery-container {
+        height: 30px;
+        width: 100%;
+        background: #e5e5e5;
+        border-radius: 10px;
+        margin: 10px 0;
+        overflow: hidden;
+    }
+    .battery-fill {
+        height: 100%;
+        text-align: right;
+        padding-right: 10px;
+        line-height: 30px;
+        color: white;
         font-weight: bold;
-        color: #6B7280;
-        animation: pulse 1.5s infinite;
+        transition: width 1s ease-in-out;
     }
     .caution-animated {
-        animation: pulse 2s ease-in-out infinite;
-        font-size: 24px;
+        animation: blink 1s ease-in-out infinite;
+        font-size: 26px;
         color: #FF4136;
         font-weight: bold;
+        text-align: center;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -124,14 +140,26 @@ if check and email_text.strip():
             st.markdown("---")
             if prediction == 1:
                 st.error(f"🚨 This email is classified as **SPAM**.")
-                st.markdown(f"<div class='confidence-animated'>Confidence: {confidence:.2f}%</div>", unsafe_allow_html=True)
                 st.markdown("""
-                    <div class='caution-animated'>⚠️ Be cautious of such messages!</div>
+                    <div class='battery-container'>
+                        <div class='battery-fill' style='width: {:.2f}%; background: #ff4d4f;'>
+                            {:.2f}%
+                        </div>
+                    </div>
+                """.format(confidence, confidence), unsafe_allow_html=True)
+                st.markdown("""
+                    <div class='caution-animated'>⚠️ WARNING: SPAM Detected! ⚠️</div>
                 """, unsafe_allow_html=True)
                 st.balloons()
             else:
                 st.success(f"✅ This email is **NOT SPAM**.")
-                st.markdown(f"<div class='confidence-animated'>Confidence: {confidence:.2f}%</div>", unsafe_allow_html=True)
+                st.markdown("""
+                    <div class='battery-container'>
+                        <div class='battery-fill' style='width: {:.2f}%; background: #4caf50;'>
+                            {:.2f}%
+                        </div>
+                    </div>
+                """.format(confidence, confidence), unsafe_allow_html=True)
                 st.markdown("""
                     <div style="animation: fadeIn 2s ease-in-out; font-size: 24px; color: #4CAF50;">
                         🎉 Looks safe and clean!
