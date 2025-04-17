@@ -4,7 +4,7 @@ import os
 import time
 from PIL import Image
 
-# Set up the Streamlit page
+# Set up Streamlit page
 st.set_page_config(
     page_title="Inbox Intelligence",
     page_icon="https://raw.githubusercontent.com/Jadav-Gajanand-19/Inbox-Intelligence-A-Bayesian-Model-for-Spam-Detection/main/inbox_intelligence_logo.png",
@@ -24,18 +24,18 @@ try:
 except Exception as e:
     st.error(f"💠 Error loading model: {str(e)}")
 
-# Sidebar with stylish small logo
+# Sidebar with BIG stylish logo
 with st.sidebar:
     st.markdown("""
         <style>
         .logo-container {
             text-align: center;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
         .logo-img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+            width: 120px;
+            height: auto;
+            border-radius: 12px;
             box-shadow: 0px 4px 12px rgba(0,0,0,0.15);
         }
         </style>
@@ -62,7 +62,7 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("Developed with 💡 using Naive Bayes and Streamlit.")
 
-# Main page styling
+# Styling
 st.markdown("""
     <style>
     .stApp {
@@ -158,11 +158,11 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Title
+# Header
 st.markdown("<div class='main-title'>📧 Inbox Intelligence</div>", unsafe_allow_html=True)
 st.markdown("<div class='subtitle'>Smart Spam Detection powered by Naive Bayes</div>", unsafe_allow_html=True)
 
-# Input
+# Input: file upload or paste text
 uploaded_file = st.file_uploader("📤 Upload a .txt or .md file:", type=["txt", "md"], key="file_upload")
 email_text = ""
 disable_textarea = uploaded_file is not None
@@ -186,7 +186,7 @@ if not disable_textarea:
 
 analyze_btn = st.button("⚙️ Analyze Email", key="analyze_button")
 
-# Prediction logic
+# Prediction
 if analyze_btn and model and vectorizer and email_text:
     with st.spinner("Analyzing the email..."):
         time.sleep(2.5)
@@ -195,8 +195,8 @@ if analyze_btn and model and vectorizer and email_text:
         confidence = max(model.predict_proba(transformed)[0]) * 100
         color = "#FF4136" if prediction == 1 else "#4CAF50"
         label = "🚨 Caution: This email is suspected to be spam." if prediction == 1 else "✅ This email is not suspected to be spam."
-
         box_class = "spam" if prediction == 1 else "not-spam"
+
         st.markdown(f"<div class='feedback-box {box_class}'>{label}</div>", unsafe_allow_html=True)
 
         st.markdown("**Confidence Meter**")
