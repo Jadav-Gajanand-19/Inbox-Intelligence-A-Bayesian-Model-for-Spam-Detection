@@ -1,59 +1,105 @@
 import streamlit as st
-import pickle
+import joblib
 import os
-from sklearn.feature_extraction.text import CountVectorizer
+from PIL import Image
 
-# Page settings
+# Load the model and vectorizer
+MODEL_PATH = "inbox intelligence model.pkl"
+if os.path.exists(MODEL_PATH):
+    model_data = joblib.load(MODEL_PATH)
+    model = model_data["model"]
+    vectorizer = model_data["vectorizer"]
+else:
+    model = None
+    vectorizer = None
+
+# Page config
 st.set_page_config(
     page_title="Inbox Intelligence",
     page_icon="📬",
-    layout="centered",
-    initial_sidebar_state="expanded",
-    menu_items={
-        'About': "This app detects spam emails using a Naive Bayes classifier."
-    }
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
-# Load model and vectorizer
-@st.cache_resource
-def load_model():
-    with open("inbox intelligence model.pkl", "rb") as f:
-        model_data = pickle.load(f)
-    return model_data['model'], model_data['vectorizer']
+# Sidebar
+with st.sidebar:
+    st.image("https://cdn-icons-png.flaticon.com/512/561/561188.png", width=100)
+    st.title("📬 Inbox Intelligence")
+    st.markdown("Detect spam messages with machine learning magic.")
+    st.markdown("---")
+    st.markdown("Developed with ❤️ using Naive Bayes and Streamlit.")
 
-model, vectorizer = load_model()
+# Header
+st.markdown("""
+    <style>
+    .main-title {
+        font-size: 48px;
+        font-weight: bold;
+        color: #3b82f6;
+    }
+    .subtitle {
+        font-size: 20px;
+        color: #555;
+    }
+    .footer {
+        margin-top: 50px;
+        font-size: 14px;
+        color: #999;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
-# App title
-st.title("📬 Inbox Intelligence: Spam Detection")
-st.markdown("This smart spam filter uses machine learning to classify emails as **Spam** or **Not Spam**.")
+st.markdown("<div class='main-title'>📥 Inbox Intelligence</div>", unsafe_allow_html=True)
+st.markdown("<div class='subtitle'>Smart Spam Detection powered by Naive Bayes</div>", unsafe_allow_html=True)
 
-# Input box
-email_input = st.text_area("📥 Paste your email content here:", height=200)
+st.markdown("---")
 
-# Predict button
-if st.button("🔍 Check Spam"):
-    if not email_input.strip():
-        st.warning("Please enter an email message to classify.")
+# Email input
+st.subheader("✉️ Paste Your Email Message Below")
+email_text = st.text_area("", height=200, placeholder="Subject: Hello\nBody: This is a test message...")
+
+# Check button
+col1, col2 = st.columns([3, 1])
+with col2:
+    check = st.button("🚀 Check Spam", use_container_width=True)
+
+# Prediction result
+if check and email_text.strip():
+    if not model or not vectorizer:
+        st.error("🔧 Model file not found. Please upload 'inbox intelligence model.pkl'.")
     else:
-        # Transform input and predict
-        features = vectorizer.transform([email_input])
-        prediction = model.predict(features)[0]
-        prediction_proba = model.predict_proba(features)[0]
+        input_vector = vectorizer.transform([email_text])
+        prediction = model.predict(input_vector)[0]
+        confidence = max(model.predict_proba(input_vector)[0]) * 100
 
-        # Output result
+        st.markdown("---")
         if prediction == 1:
-            st.error(f"🚨 This email is likely SPAM (Confidence: {prediction_proba[1]*100:.2f}%)")
+            st.error(f"🚨 This email is classified as **SPAM** with {confidence:.2f}% confidence.")
         else:
-            st.success(f"✅ This email is NOT spam (Confidence: {prediction_proba[0]*100:.2f}%)")
+            st.success(f"✅ This email is **NOT SPAM** with {confidence:.2f}% confidence.")
+
+        st.markdown("---")
+        st.info("You can modify the email and re-check instantly.")
 
 # Example emails
-with st.expander("📄 Try sample emails"):
-    samples = [
-        "Subject: Congratulations! You've won a free cruise! Click here to claim your prize.",
-        "Subject: Meeting agenda for tomorrow's 10 AM sync.",
-        "Subject: Get rich fast with this one simple trick."
-    ]
-    for i, sample in enumerate(samples, start=1):
-        if st.button(f"Load Example #{i}"):
-            st.session_state["email_input"] = sample
-            email_input = sample
+with st.expander("🔍 Show Sample Emails"):
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("🏆 Non-Spam Example"):
+            st.session_state["email_text"] = "Subject: Meeting Reminder\nBody: Don’t forget our 10AM sync tomorrow."
+    with col2:
+        if st.button("💸 Spam Example"):
+            st.session_state["email_text"] = "Subject: You won a prize!\nBody: Click here to claim your $10,000 now!"
+
+# Footer
+st.markdown("""
+    <div class='footer'>
+    Built with ❤️ by [Your Name]. This is a demo of spam detection using machine learning.
+    </div>
+""", unsafe_allow_html=True)
+
+# Retain text on reload
+if "email_text" in st.session_state:
+    email_text = st.session_state["email_text"]
+    st.text_area("", value=email_text, height=200, key="email_text_display")
+
