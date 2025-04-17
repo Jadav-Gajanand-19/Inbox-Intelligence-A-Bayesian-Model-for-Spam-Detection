@@ -50,6 +50,7 @@ st.markdown("""
     <style>
     .stApp {
         background: white !important;
+        font-family: 'Trebuchet MS', sans-serif;
     }
     .main-title {
         font-size: 48px;
@@ -127,10 +128,10 @@ st.markdown("<div class='main-title'>📧 Inbox Intelligence</div>", unsafe_allo
 st.markdown("<div class='subtitle'>Smart Spam Detection powered by Naive Bayes</div>", unsafe_allow_html=True)
 
 # --- Input Options ---
-input_option = st.radio("Choose input method:", ("📤 Browse Email File", "✍️ Paste Email Text"), key="input_option")
-
 email_text = ""
 uploaded_file = None
+
+input_option = st.radio("Choose input method:", ("📤 Browse Email File", "✍️ Paste Email Text"), key="input_option")
 
 if input_option == "📤 Browse Email File":
     uploaded_file = st.file_uploader("Upload a .txt file containing the email:", type=["txt"], key="uploader")
@@ -183,15 +184,13 @@ if st.button("Analyze Email", key="analyze_button") and model and vectorizer and
         """, unsafe_allow_html=True)
 
         if prediction == 1:
-            st.markdown(
-                "<div class='caution-animated spam'>🚨 Caution: This email looks like spam!</div>",
-                unsafe_allow_html=True
-            )
+            st.markdown("<div class='caution-animated spam'>🚨 Caution: This email looks like spam!</div>", unsafe_allow_html=True)
         else:
-            st.markdown(
-                "<div class='caution-animated not-spam'>✅ This email appears safe.</div>",
-                unsafe_allow_html=True
-            )
+            st.markdown("<div class='caution-animated not-spam'>✅ This email appears safe.</div>", unsafe_allow_html=True)
+
+    st.markdown("### 📄 Email Content")
+    st.code(email_text, language='markdown')
+
 elif st.button("Analyze Email", key="analyze_button_empty") and not email_text:
     st.warning("Please provide email content to analyze.")
 
