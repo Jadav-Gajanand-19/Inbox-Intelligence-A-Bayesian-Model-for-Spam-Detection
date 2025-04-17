@@ -1,16 +1,16 @@
 import streamlit as st
+import joblib
+import os
+import time
+from PIL import Image
+import streamlit.components.v1 as components
+
 st.set_page_config(
     page_title="Inbox Intelligence",
     page_icon="https://raw.githubusercontent.com/Jadav-Gajanand-19/Inbox-Intelligence-A-Bayesian-Model-for-Spam-Detection/main/inbox_intelligence_logo.png",
     layout="wide",
     initial_sidebar_state="expanded"
 )
-
-import joblib
-import os
-import time
-from PIL import Image
-import streamlit.components.v1 as components
 
 # Load the model and vectorizer
 MODEL_PATH = "inbox_intelligence_model.pkl"
@@ -48,10 +48,6 @@ with st.sidebar:
 # Header with styles
 st.markdown("""
     <style>
-    body {
-        background: white;
-        color: #000000;
-    }
     .stApp {
         background: white !important;
     }
@@ -126,41 +122,56 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
+# Snow and balloon animations
+st.snow()
+
 st.markdown("<div class='main-title'>📧 Inbox Intelligence</div>", unsafe_allow_html=True)
 st.markdown("<div class='subtitle'>Smart Spam Detection powered by Naive Bayes</div>", unsafe_allow_html=True)
 
-uploaded_file = st.file_uploader("📎 Browse Email File (TXT format only)", type=["txt"])
-st.markdown("---")
+# --- Input Options ---
+input_option = st.radio("Choose input method:", ("📤 Browse Email File", "✍️ Paste Email Text"))
 
-email_input_disabled = uploaded_file is not None
-email_text = st.text_area("✉️ Paste your email content below:", height=200, disabled=email_input_disabled)
+email_text = ""
+uploaded_file = None
 
-if uploaded_file is not None:
-    email_text = uploaded_file.read().decode("utf-8")
+if input_option == "📤 Browse Email File":
+    uploaded_file = st.file_uploader("Upload a .txt file containing the email:", type=["txt"])
+    if uploaded_file:
+        email_text = uploaded_file.read().decode("utf-8")
+        st.text_area("Email Content", email_text, height=200, disabled=True)
+else:
+    email_text = st.text_area("Paste your email content here:", height=200)
 
-if st.button("🔍 Detect Spam"):
-    if not model or not vectorizer:
-        st.error("Model not loaded correctly. Please check the file and retry.")
-    elif not email_text.strip():
-        st.warning("Please enter or upload email content first.")
-    else:
-        with st.spinner("Analyzing the message..."):
-            time.sleep(1.2)
-            prediction = model.predict([email_text])[0]
-            proba = model.predict_proba([email_text])[0]
-            confidence = round(max(proba) * 100, 2)
+if st.button("Analyze Email") and model and vectorizer and email_text:
+    with st.spinner("Analyzing the email..."):
+        transformed = vectorizer.transform([email_text])
+        prediction = model.predict(transformed)[0]
+        confidence = max(model.predict_proba(transformed)[0]) * 100
+        label = "Spam" if prediction == 1 else "Not Spam"
+        color = "#FF4136" if prediction == 1 else "#4CAF50"
 
-            result_label = "🚨 Spam Detected" if prediction == 1 else "✅ Not Spam"
-            label_class = "spam" if prediction == 1 else "not-spam"
-            caution = "<div class='caution-animated spam'>⚠️ Potential Spam Message</div>" if prediction == 1 else "<div class='caution-animated not-spam'>🟢 Safe Message</div>"
+        st.balloons() if prediction == 0 else st.snow()
 
-            st.markdown(f"<h2 class='{label_class}'>{result_label}</h2>", unsafe_allow_html=True)
-            st.markdown(caution, unsafe_allow_html=True)
+        st.markdown(f"<h3 style='color:{color}; animation: blink 1s infinite'>{label}</h3>", unsafe_allow_html=True)
+        st.markdown("**Confidence Meter**")
+        st.markdown(f"""
+            <div class="battery-container">
+                <div class="battery-fill" style="background:{color}; width:{confidence}%">{confidence:.2f}%</div>
+            </div>
+        """, unsafe_allow_html=True)
 
-            st.markdown("### Confidence Meter")
-            battery_color = "#FF4136" if prediction == 1 else "#4CAF50"
-            st.markdown(f"""
-                <div class="battery-container">
-                    <div class="battery-fill" style="width:{confidence}%; background:{battery_color}">{confidence}%</div>
-                </div>
-            """, unsafe_allow_html=True)
+        if prediction == 1:
+            st.markdown(
+                "<div class='caution-animated spam'>🚨 Caution: This email looks like spam!</div>",
+                unsafe_allow_html=True
+            )
+        else:
+            st.markdown(
+                "<div class='caution-animated not-spam'>✅ This email appears safe.</div>",
+                unsafe_allow_html=True
+            )
+elif st.button("Analyze Email") and not email_text:
+    st.warning("Please provide email content to analyze.")
+
+# Optional Footer
+st.markdown("<div class='footer'>Built with 💡 by Gajanand | Inbox Intelligence 2025</div>", unsafe_allow_html=True)
