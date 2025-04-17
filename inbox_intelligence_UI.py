@@ -127,15 +127,18 @@ st.markdown("""
 st.markdown("<div class='main-title'>📧 Inbox Intelligence</div>", unsafe_allow_html=True)
 st.markdown("<div class='subtitle'>Smart Spam Detection powered by Naive Bayes</div>", unsafe_allow_html=True)
 
-# --- Input Area ---
-email_text = st.text_area("Paste your email content here:", height=200, key="paste_text")
-
 uploaded_file = st.file_uploader("Browse file", type=["txt", "md"])
+email_text = ""
 
 if uploaded_file is not None:
     email_text = uploaded_file.read().decode("utf-8")
     st.markdown("### 📄 Email Content")
     st.code(email_text, language='markdown')
+    disable_textarea = True
+else:
+    disable_textarea = False
+
+email_text = st.text_area("Paste your email content here:", value=email_text if not disable_textarea else "", height=200, key="paste_text", disabled=disable_textarea)
 
 if st.button("Analyze Email", key="analyze_button") and model and vectorizer and email_text:
     with st.spinner("Analyzing the email..."):
@@ -183,9 +186,6 @@ if st.button("Analyze Email", key="analyze_button") and model and vectorizer and
             st.markdown("<div class='caution-animated spam'>🚨 Caution: This email looks like spam!</div>", unsafe_allow_html=True)
         else:
             st.markdown("<div class='caution-animated not-spam'>✅ This email appears safe.</div>", unsafe_allow_html=True)
-
-elif st.button("Analyze Email", key="analyze_button_empty") and not email_text:
-    st.warning("Please provide email content to analyze.")
 
 # Optional Footer
 st.markdown("<div class='footer'>Built with 💡 by Gajanand | Inbox Intelligence 2025</div>", unsafe_allow_html=True)
