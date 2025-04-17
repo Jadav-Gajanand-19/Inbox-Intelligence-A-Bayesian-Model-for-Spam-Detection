@@ -87,10 +87,6 @@ st.markdown("""
         0% { opacity: 0; transform: translateY(-10px); }
         100% { opacity: 1; transform: translateY(0); }
     }
-    @keyframes blink {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0; }
-    }
     .battery-container {
         height: 30px;
         width: 100%;
@@ -108,17 +104,19 @@ st.markdown("""
         font-weight: bold;
         transition: width 1s ease-in-out;
     }
-    .caution-animated {
-        animation: blink 1s ease-in-out infinite;
-        font-size: 26px;
+    .feedback-box {
+        padding: 10px;
+        border-radius: 10px;
+        margin-top: 20px;
+        color: white;
         font-weight: bold;
         text-align: center;
     }
     .spam {
-        color: #FF4136;
+        background-color: #FF4136;
     }
     .not-spam {
-        color: #4CAF50;
+        background-color: #4CAF50;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -140,7 +138,7 @@ else:
 
 email_text = st.text_area("Paste your email content here:", value=email_text if not disable_textarea else "", height=200, key="paste_text", disabled=disable_textarea)
 
-analyze_btn = st.button("🔄 Analyze Email", key="analyze_button")
+analyze_btn = st.button("🔍 Analyze Email", key="analyze_button")
 
 if analyze_btn and model and vectorizer and email_text:
     with st.spinner("Analyzing the email..."):
@@ -174,7 +172,7 @@ if analyze_btn and model and vectorizer and email_text:
                     for (let i = 0; i < 20; i++) {
                         setTimeout(() => {
                             const bomb = document.createElement('div');
-                            bomb.textContent = "💣";
+                            bomb.textContent = "💥";
                             bomb.style.position = 'fixed';
                             bomb.style.left = Math.random() * 100 + 'vw';
                             bomb.style.top = Math.random() * 100 + 'vh';
@@ -187,7 +185,7 @@ if analyze_btn and model and vectorizer and email_text:
                 </script>
             """, height=0)
 
-        st.markdown(f"<h3 style='color:{color}; animation: blink 1s infinite'>{label}</h3>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='color:{color}'>{label}</h3>", unsafe_allow_html=True)
         st.markdown("**Confidence Meter**")
         st.markdown(f"""
             <div class="battery-container">
@@ -196,9 +194,9 @@ if analyze_btn and model and vectorizer and email_text:
         """, unsafe_allow_html=True)
 
         if prediction == 1:
-            st.markdown("<div class='caution-animated spam'>🚨 Caution: This email looks like spam!</div>", unsafe_allow_html=True)
+            st.markdown("<div class='feedback-box spam'>🚨 Caution: This email looks like spam!</div>", unsafe_allow_html=True)
         else:
-            st.markdown("<div class='caution-animated not-spam'>✅ This email appears safe.</div>", unsafe_allow_html=True)
+            st.markdown("<div class='feedback-box not-spam'>✅ This email appears safe.</div>", unsafe_allow_html=True)
 
 # Optional Footer
 st.markdown("<div class='footer'>Built with 💡 by Gajanand | Inbox Intelligence 2025</div>", unsafe_allow_html=True)
