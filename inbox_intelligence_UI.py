@@ -30,6 +30,15 @@ with st.sidebar:
     st.title("📨 Inbox Intelligence")
     st.markdown("Detect spam messages with machine learning magic.")
     st.markdown("---")
+    st.markdown("### 🔍 What does it do?")
+    st.markdown("This app uses a Naive Bayes classifier to analyze email messages and determine whether they are **spam** or **not spam**.")
+    st.markdown("---")
+    st.markdown("### ⚙️ How it works")
+    st.markdown("1. Text is vectorized using TF-IDF.\n2. The model evaluates the features.\n3. It returns a prediction with a confidence score.")
+    st.markdown("---")
+    st.markdown("### 💬 Example Uses")
+    st.markdown("- Check suspicious emails\n- Test your spam filters\n- Educational demo for ML beginners")
+    st.markdown("---")
     st.markdown("Developed with 💡 using Naive Bayes and Streamlit.")
 
 # Header with animation
