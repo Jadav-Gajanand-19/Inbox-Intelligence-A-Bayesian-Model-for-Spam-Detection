@@ -140,8 +140,11 @@ else:
 
 email_text = st.text_area("Paste your email content here:", value=email_text if not disable_textarea else "", height=200, key="paste_text", disabled=disable_textarea)
 
-if st.button("Analyze Email", key="analyze_button") and model and vectorizer and email_text:
+analyze_btn = st.button("🔍 Analyze Email", key="analyze_button")
+
+if analyze_btn and model and vectorizer and email_text:
     with st.spinner("Analyzing the email..."):
+        time.sleep(2.5)
         transformed = vectorizer.transform([email_text])
         prediction = model.predict(transformed)[0]
         confidence = max(model.predict_proba(transformed)[0]) * 100
