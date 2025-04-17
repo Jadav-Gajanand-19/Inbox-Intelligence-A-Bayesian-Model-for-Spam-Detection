@@ -127,19 +127,8 @@ st.markdown("""
 st.markdown("<div class='main-title'>📧 Inbox Intelligence</div>", unsafe_allow_html=True)
 st.markdown("<div class='subtitle'>Smart Spam Detection powered by Naive Bayes</div>", unsafe_allow_html=True)
 
-# --- Input Options ---
-email_text = ""
-uploaded_file = None
-
-input_option = st.radio("Choose input method:", ("📤 Browse Email File", "✍️ Paste Email Text"), key="input_option")
-
-if input_option == "📤 Browse Email File":
-    uploaded_file = st.file_uploader("Upload a .txt file containing the email:", type=["txt"], key="uploader")
-    if uploaded_file:
-        email_text = uploaded_file.read().decode("utf-8")
-        st.text_area("Email Content", email_text, height=200, disabled=True, key="file_text")
-else:
-    email_text = st.text_area("Paste your email content here:", height=200, key="paste_text")
+# --- Input ---
+email_text = st.text_area("Paste your email content here:", height=200, key="paste_text")
 
 if st.button("Analyze Email", key="analyze_button") and model and vectorizer and email_text:
     with st.spinner("Analyzing the email..."):
