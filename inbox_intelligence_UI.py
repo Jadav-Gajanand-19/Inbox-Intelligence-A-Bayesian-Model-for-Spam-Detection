@@ -138,7 +138,10 @@ if uploaded_file is not None:
 else:
     disable_textarea = False
 
-email_text = st.text_area("Paste your email content here:", value=email_text if not disable_textarea else "", height=200, key="paste_text", disabled=disable_textarea)
+textarea_input = st.text_area("Paste your email content here:", value="" if disable_textarea else email_text, height=200, key="paste_text", disabled=disable_textarea)
+
+if not disable_textarea:
+    email_text = textarea_input
 
 analyze_btn = st.button("🔍 Analyze Email", key="analyze_button")
 
