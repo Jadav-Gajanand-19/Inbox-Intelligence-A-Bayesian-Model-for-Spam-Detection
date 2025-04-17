@@ -49,33 +49,33 @@ with st.sidebar:
 st.markdown("""
     <style>
     body {
-        background: linear-gradient(to right, #121212, #2c2c2c);
+        background: linear-gradient(90deg, rgba(131, 58, 180, 1) 0%, rgba(253, 29, 29, 1) 50%, rgba(252, 176, 69, 1) 100%);
         color: #ffffff;
     }
     .stApp {
-        background: linear-gradient(135deg, #121212 0%, #2c2c2c 100%) !important;
+        background: linear-gradient(90deg, rgba(131, 58, 180, 1) 0%, rgba(253, 29, 29, 1) 50%, rgba(252, 176, 69, 1) 100%) !important;
     }
     .main-title {
         font-size: 48px;
         font-weight: bold;
-        color: #833AB4;
+        color: #ffffff;
         animation: fadeIn 2s ease-in-out;
     }
     .subtitle {
         font-size: 20px;
-        color: #cccccc;
+        color: #eeeeee;
         animation: fadeIn 3s ease-in-out;
     }
     .footer {
         margin-top: 50px;
         font-size: 14px;
-        color: #888;
+        color: #dddddd;
         animation: fadeIn 4s ease-in-out;
     }
     .stButton button {
-        border: 2px solid #833AB4;
-        background-color: #1f1f1f;
-        color: #833AB4;
+        border: 2px solid #ffffff;
+        background-color: rgba(255, 255, 255, 0.1);
+        color: #ffffff;
         padding: 0.5em 1em;
         font-size: 16px;
         font-weight: bold;
@@ -83,8 +83,8 @@ st.markdown("""
         border-radius: 8px;
     }
     .stButton button:hover {
-        background-color: #833AB4;
-        color: white;
+        background-color: #ffffff;
+        color: #833AB4;
     }
     @keyframes fadeIn {
         0% { opacity: 0; transform: translateY(-10px); }
