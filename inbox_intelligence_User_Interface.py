@@ -193,14 +193,52 @@ if analyze_btn and model and vectorizer and email_text:
 
 # Footer with icons
 st.markdown("""
+    <style>
+    .footer {
+        margin-top: 80px;
+        font-size: 14px;
+        color: #444444;
+        animation: fadeIn 4s ease-in-out;
+        text-align: center;
+    }
+    .social-icons {
+        margin-top: 20px;
+        text-align: center;
+    }
+    .social-icons a {
+        margin: 0 10px;
+        display: inline-block;
+    }
+    .social-icons img {
+        width: 32px;
+        height: 32px;
+        object-fit: contain;
+        filter: grayscale(100%);
+        transition: filter 0.3s ease;
+    }
+    .social-icons img:hover {
+        filter: none;
+    }
+    </style>
     <div class='footer'>
         Built with 💡 by Gajanand | Inbox Intelligence 2025
         <div class='social-icons'>
-            <a href='https://www.linkedin.com/in/jadav-gajanand-3aa946290/' target='_blank'><img src='https://cdn-icons-png.flaticon.com/512/174/174857.png' style='width:40px;height:40px;/></a>
-            <a href='https://github.com/Jadav-Gajanand-19' target='_blank'><img src='https://cdn-icons-png.flaticon.com/512/25/25231.png' style='width:40px;height:40px;/></a>
-            <a href='https://www.instagram.com/cadet_x9/' target='_blank'><img src='https://cdn-icons-png.flaticon.com/512/1384/1384031.png' style='width:40px;height:40px;/></a>
-            <a href='https://www.kaggle.com/jadavgajanand' target='_blank'><img src='https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/kaggle.svg' style='width:40px;height:40px;'/></a>
-            <a href='https://leetcode.com/u/Jadav_Gajanand/' target='_blank'><img src='https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/leetcode.svg' style='width:40px;height:40px;'/></a>
+            <a href='https://www.linkedin.com/in/jadav-gajanand-3aa946290/' target='_blank'>
+                <img src='https://cdn-icons-png.flaticon.com/512/174/174857.png'/>
+            </a>
+            <a href='https://github.com/Jadav-Gajanand-19' target='_blank'>
+                <img src='https://cdn-icons-png.flaticon.com/512/25/25231.png'/>
+            </a>
+            <a href='https://www.instagram.com/cadet_x9/' target='_blank'>
+                <img src='https://cdn-icons-png.flaticon.com/512/1384/1384031.png'/>
+            </a>
+            <a href='https://www.kaggle.com/jadavgajanand' target='_blank'>
+                <img src='https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/kaggle.svg'/>
+            </a>
+            <a href='https://leetcode.com/u/Jadav_Gajanand/' target='_blank'>
+                <img src='https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/leetcode.svg'/>
+            </a>
         </div>
     </div>
+
 """, unsafe_allow_html=True)
