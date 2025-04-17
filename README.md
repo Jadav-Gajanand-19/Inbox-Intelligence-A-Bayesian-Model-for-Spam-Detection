@@ -45,5 +45,5 @@ Whether you're exploring email classification, testing a custom dataset, or buil
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/jadav-gajanand-19/inbox-intelligence.git
+git clone https://github.com/Jadav-Gajanand-19/inbox-intelligence.git
 cd inbox-intelligence
