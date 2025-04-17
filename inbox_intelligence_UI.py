@@ -45,32 +45,33 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("Developed with 💡 using Naive Bayes and Streamlit.")
 
-# Header with animation
+# Header with animation and dark theme style
 st.markdown("""
     <style>
     body {
-        background: linear-gradient(to right, #833AB4, #ffffff);
+        background: linear-gradient(to right, #121212, #2c2c2c);
+        color: #ffffff;
     }
     .main-title {
         font-size: 48px;
         font-weight: bold;
-        color: #3b82f6;
+        color: #833AB4;
         animation: fadeIn 2s ease-in-out;
     }
     .subtitle {
         font-size: 20px;
-        color: #555;
+        color: #cccccc;
         animation: fadeIn 3s ease-in-out;
     }
     .footer {
         margin-top: 50px;
         font-size: 14px;
-        color: #999;
+        color: #888;
         animation: fadeIn 4s ease-in-out;
     }
     .stButton button {
         border: 2px solid #833AB4;
-        background-color: white;
+        background-color: #121212;
         color: #833AB4;
         padding: 0.5em 1em;
         font-size: 16px;
@@ -93,7 +94,7 @@ st.markdown("""
     .battery-container {
         height: 30px;
         width: 100%;
-        background: #e5e5e5;
+        background: #444;
         border-radius: 10px;
         margin: 10px 0;
         overflow: hidden;
