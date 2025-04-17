@@ -1,7 +1,10 @@
 import streamlit as st
 import joblib
 import os
+import time
 from PIL import Image
+import matplotlib.pyplot as plt
+import numpy as np
 
 # Load the model and vectorizer
 MODEL_PATH = "inbox_intelligence_model.pkl"
@@ -56,34 +59,12 @@ st.markdown("<div class='subtitle'>Smart Spam Detection powered by Naive Bayes</
 
 st.markdown("---")
 
-# State for pre-filled examples
-if "preset_email" not in st.session_state:
-    st.session_state["preset_email"] = ""
-
-if "load_non_spam" not in st.session_state:
-    st.session_state["load_non_spam"] = False
-
-if "load_spam" not in st.session_state:
-    st.session_state["load_spam"] = False
-
-# Load sample if flag set
-if st.session_state["load_non_spam"]:
-    st.session_state["preset_email"] = "Subject: Meeting Reminder\nBody: Don’t forget our 10AM sync tomorrow."
-    st.session_state["load_non_spam"] = False
-    st.experimental_rerun()
-
-if st.session_state["load_spam"]:
-    st.session_state["preset_email"] = "Subject: You won a prize!\nBody: Click here to claim your $10,000 now!"
-    st.session_state["load_spam"] = False
-    st.experimental_rerun()
-
-# Use preset_email for text area
+# Input area
 st.subheader("✉️ Paste Your Email Message Below")
 email_text = st.text_area(
     "",
     height=200,
     placeholder="Subject: Hello\nBody: This is a test message...",
-    value=st.session_state.get("preset_email", ""),
     key="email_input"
 )
 
@@ -92,36 +73,52 @@ col1, col2 = st.columns([3, 1])
 with col2:
     check = st.button("🚀 Check Spam", use_container_width=True)
 
+# Pie chart function for confidence
+def display_confidence_pie(confidence):
+    labels = ["Confidence", "Remaining"]
+    sizes = [confidence, 100 - confidence]
+    colors = ["#4CAF50", "#f0f0f0"] if confidence > 50 else ["#FF4136", "#f0f0f0"]
+    explode = (0.1, 0)
+
+    fig, ax = plt.subplots()
+    wedges, texts, autotexts = ax.pie(
+        sizes,
+        explode=explode,
+        labels=labels,
+        colors=colors,
+        autopct="%1.1f%%",
+        shadow=True,
+        startangle=140
+    )
+    ax.axis('equal')
+    st.pyplot(fig)
+
 # Prediction result
 if check and email_text.strip():
     if model is None or vectorizer is None:
         st.error("🔧 Model or vectorizer not loaded properly.")
     else:
         try:
-            input_vector = vectorizer.transform([email_text])
-            prediction = model.predict(input_vector)[0]
-            confidence = max(model.predict_proba(input_vector)[0]) * 100
+            with st.spinner("Analyzing message..."):
+                time.sleep(1.5)
+                input_vector = vectorizer.transform([email_text])
+                prediction = model.predict(input_vector)[0]
+                confidence = max(model.predict_proba(input_vector)[0]) * 100
 
             st.markdown("---")
             if prediction == 1:
                 st.error(f"🚨 This email is classified as **SPAM** with {confidence:.2f}% confidence.")
+                st.balloons()
             else:
                 st.success(f"✅ This email is **NOT SPAM** with {confidence:.2f}% confidence.")
+                st.snow()
+
+            display_confidence_pie(confidence)
 
             st.markdown("---")
             st.info("You can modify the email and re-check instantly.")
         except Exception as e:
             st.error(f"❌ Prediction failed: {str(e)}")
-
-# Example emails
-with st.expander("🔍 Show Sample Emails"):
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button("🏆 Non-Spam Example"):
-            st.session_state["load_non_spam"] = True
-    with col2:
-        if st.button("💸 Spam Example"):
-            st.session_state["load_spam"] = True
 
 # Footer
 st.markdown("""
@@ -129,6 +126,8 @@ st.markdown("""
     Built with ❤️ by [Your Name]. This is a demo of spam detection using machine learning.
     </div>
 """, unsafe_allow_html=True)
+
+    
 
 
 
