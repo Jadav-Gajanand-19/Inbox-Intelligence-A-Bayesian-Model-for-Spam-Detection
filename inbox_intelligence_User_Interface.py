@@ -3,8 +3,8 @@ import joblib
 import os
 import time
 from PIL import Image
-import streamlit.components.v1 as components
 
+# Set up the Streamlit page
 st.set_page_config(
     page_title="Inbox Intelligence",
     page_icon="https://raw.githubusercontent.com/Jadav-Gajanand-19/Inbox-Intelligence-A-Bayesian-Model-for-Spam-Detection/main/inbox_intelligence_logo.png",
@@ -12,7 +12,41 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Load the model and vectorizer
+# Floating About Developer Button with Fade-In
+st.markdown("""
+    <style>
+    .about-dev-btn {
+        position: fixed;
+        top: 15px;
+        right: 20px;
+        background-color: #6a1b9a;
+        color: white;
+        padding: 8px 16px;
+        font-size: 14px;
+        font-weight: bold;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        z-index: 9999;
+        box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
+        opacity: 0;
+        animation: fadeIn 1.5s ease-in-out forwards;
+    }
+    .about-dev-btn:hover {
+        background-color: #833AB4;
+    }
+    @keyframes fadeIn {
+        to {
+            opacity: 1;
+        }
+    }
+    </style>
+    <button class="about-dev-btn" onclick="window.open('https://www.aiip.in/profile/j.gajanand1123', '_blank')">
+        👨‍💻 About Developer
+    </button>
+""", unsafe_allow_html=True)
+
+# Load model
 MODEL_PATH = "inbox_intelligence_model.pkl"
 model = None
 vectorizer = None
@@ -24,7 +58,7 @@ try:
 except Exception as e:
     st.error(f"💠 Error loading model: {str(e)}")
 
-# Sidebar with smaller, stylish logo
+# Sidebar with stylish small logo
 with st.sidebar:
     st.markdown("""
         <style>
@@ -59,11 +93,10 @@ with st.sidebar:
     st.markdown("### 📚 More Info")
     st.markdown("Naive Bayes is a probabilistic classifier based on Bayes' Theorem. It's fast, efficient, and often used for spam detection.")
     st.markdown("Learn more about it [here](https://en.wikipedia.org/wiki/Naive_Bayes_classifier).")
-    
     st.markdown("---")
     st.markdown("Developed with 💡 using Naive Bayes and Streamlit.")
 
-# Header with styles
+# Main page styling
 st.markdown("""
     <style>
     .stApp {
@@ -82,11 +115,29 @@ st.markdown("""
         animation: fadeIn 3s ease-in-out;
     }
     .footer {
-        margin-top: 80px; /* Added more space above the footer */
+        margin-top: 80px;
         font-size: 14px;
         color: #444444;
         animation: fadeIn 4s ease-in-out;
         text-align: center;
+    }
+    .social-icons {
+        margin-top: 20px;
+        text-align: center;
+    }
+    .social-icons a {
+        margin: 0 10px;
+        display: inline-block;
+    }
+    .social-icons img {
+        width: 32px;
+        height: 32px;
+        object-fit: contain;
+        filter: grayscale(100%);
+        transition: filter 0.3s ease;
+    }
+    .social-icons img:hover {
+        filter: none;
     }
     .stButton button {
         border: 2px solid #833AB4;
@@ -102,10 +153,6 @@ st.markdown("""
     .stButton button:hover {
         background-color: #ffffff;
         color: #833AB4;
-    }
-    @keyframes fadeIn {
-        0% { opacity: 0; transform: translateY(-10px); }
-        100% { opacity: 1; transform: translateY(0); }
     }
     .battery-container {
         height: 30px;
@@ -145,13 +192,13 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Header content
+# Title
 st.markdown("<div class='main-title'>📧 Inbox Intelligence</div>", unsafe_allow_html=True)
 st.markdown("<div class='subtitle'>Smart Spam Detection powered by Naive Bayes</div>", unsafe_allow_html=True)
 
-uploaded_file = st.file_uploader("Browse file", type=["txt", "md"], key="file_upload")
+# Input
+uploaded_file = st.file_uploader("📤 Upload a .txt or .md file:", type=["txt", "md"], key="file_upload")
 email_text = ""
-
 disable_textarea = uploaded_file is not None
 
 if uploaded_file is not None:
@@ -160,29 +207,31 @@ if uploaded_file is not None:
     st.markdown("### 📄 Email Content")
     st.code(file_contents, language='markdown')
 
-container = st.container()
-with container:
-    textarea_input = st.text_area("Paste your email content here:", value="" if disable_textarea else email_text, height=200, key="paste_text", disabled=disable_textarea)
+textarea_input = st.text_area(
+    "✏️ Paste your email content here:",
+    value="" if disable_textarea else email_text,
+    height=200,
+    key="paste_text",
+    disabled=disable_textarea
+)
 
 if not disable_textarea:
     email_text = textarea_input
 
 analyze_btn = st.button("⚙️ Analyze Email", key="analyze_button")
 
+# Prediction logic
 if analyze_btn and model and vectorizer and email_text:
     with st.spinner("Analyzing the email..."):
         time.sleep(2.5)
-
         transformed = vectorizer.transform([email_text])
         prediction = model.predict(transformed)[0]
         confidence = max(model.predict_proba(transformed)[0]) * 100
-        label = "Spam" if prediction == 1 else "Not Spam"
         color = "#FF4136" if prediction == 1 else "#4CAF50"
+        label = "🚨 Caution: This email is suspected to be spam." if prediction == 1 else "✅ This email is not suspected to be spam."
 
-        if prediction == 1:
-            st.markdown("<div class='feedback-box spam'>🚨 Caution: This email is suspected to be spam.</div>", unsafe_allow_html=True)
-        else:
-            st.markdown("<div class='feedback-box not-spam'>✅ This email is not suspected to be spam.</div>", unsafe_allow_html=True)
+        box_class = "spam" if prediction == 1 else "not-spam"
+        st.markdown(f"<div class='feedback-box {box_class}'>{label}</div>", unsafe_allow_html=True)
 
         st.markdown("**Confidence Meter**")
         st.markdown(f"""
@@ -191,35 +240,8 @@ if analyze_btn and model and vectorizer and email_text:
             </div>
         """, unsafe_allow_html=True)
 
-# Footer with icons
+# Footer
 st.markdown("""
-    <style>
-    .footer {
-        margin-top: 80px;
-        font-size: 14px;
-        color: #444444;
-        animation: fadeIn 4s ease-in-out;
-        text-align: center;
-    }
-    .social-icons {
-        margin-top: 20px;
-        text-align: center;
-    }
-    .social-icons a {
-        margin: 0 10px;
-        display: inline-block;
-    }
-    .social-icons img {
-        width: 32px;
-        height: 32px;
-        object-fit: contain;
-        filter: grayscale(100%);
-        transition: filter 0.3s ease;
-    }
-    .social-icons img:hover {
-        filter: none;
-    }
-    </style>
     <div class='footer'>
         Built with 💡 by Gajanand | Inbox Intelligence 2025
         <div class='social-icons'>
@@ -240,5 +262,4 @@ st.markdown("""
             </a>
         </div>
     </div>
-
 """, unsafe_allow_html=True)
