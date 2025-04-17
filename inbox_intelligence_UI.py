@@ -3,16 +3,8 @@ import joblib
 import os
 from PIL import Image
 
-# Page config - MUST BE FIRST
-st.set_page_config(
-    page_title="Inbox Intelligence",
-    page_icon="📬",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
-
 # Load the model and vectorizer
-MODEL_PATH = "inbox_intelligence_model.pkl"
+MODEL_PATH = "inbox intelligence model.pkl"
 model = None
 vectorizer = None
 
@@ -21,7 +13,15 @@ try:
     model = model_data["model"]
     vectorizer = model_data["vectorizer"]
 except Exception as e:
-    st.error(f"🔧 Error loading model or vectorizer: {str(e)}")
+    st.error(f"🔧 Error loading model: {str(e)}")
+
+# Page config
+st.set_page_config(
+    page_title="Inbox Intelligence",
+    page_icon="📬",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
 # Sidebar
 with st.sidebar:
@@ -56,9 +56,19 @@ st.markdown("<div class='subtitle'>Smart Spam Detection powered by Naive Bayes</
 
 st.markdown("---")
 
-# Email input
+# State for pre-filled examples
+if "preset_email" not in st.session_state:
+    st.session_state["preset_email"] = ""
+
+# Use preset_email for text area
 st.subheader("✉️ Paste Your Email Message Below")
-email_text = st.text_area("", height=200, placeholder="Subject: Hello\nBody: This is a test message...", key="email_input")
+email_text = st.text_area(
+    "",
+    height=200,
+    placeholder="Subject: Hello\nBody: This is a test message...",
+    value=st.session_state.get("preset_email", ""),
+    key="email_input"
+)
 
 # Check button
 col1, col2 = st.columns([3, 1])
@@ -91,17 +101,19 @@ with st.expander("🔍 Show Sample Emails"):
     col1, col2 = st.columns(2)
     with col1:
         if st.button("🏆 Non-Spam Example"):
-            st.session_state["email_input"] = "Subject: Meeting Reminder\nBody: Don’t forget our 10AM sync tomorrow."
+            st.session_state["preset_email"] = "Subject: Meeting Reminder\nBody: Don’t forget our 10AM sync tomorrow."
+            st.experimental_rerun()
     with col2:
         if st.button("💸 Spam Example"):
-            st.session_state["email_input"] = "Subject: You won a prize!\nBody: Click here to claim your $10,000 now!"
+            st.session_state["preset_email"] = "Subject: You won a prize!\nBody: Click here to claim your $10,000 now!"
+            st.experimental_rerun()
 
 # Footer
 st.markdown("""
     <div class='footer'>
     Built with ❤️ by [Your Name]. This is a demo of spam detection using machine learning.
     </div>
-""", unsafe_allow_html=True)
+""", unsafe_allow_html=True))
 
 
 
