@@ -7,8 +7,6 @@ from PIL import Image
 MODEL_PATH = "inbox intelligence model.pkl"
 if os.path.exists(MODEL_PATH):
     model_data = joblib.load(MODEL_PATH)
-    model = model_data["model"]
-    vectorizer = model_data["vectorizer"]
 else:
     model = None
     vectorizer = None
