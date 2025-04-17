@@ -3,12 +3,15 @@ import joblib
 import os
 from PIL import Image
 
-# Load the model or pipeline
+# Load the model and vectorizer
 MODEL_PATH = "inbox intelligence model.pkl"
 if os.path.exists(MODEL_PATH):
-    model = joblib.load(MODEL_PATH)
+    model_data = joblib.load(MODEL_PATH)
+    model = model_data["model"]
+    vectorizer = model_data["vectorizer"]
 else:
     model = None
+    vectorizer = None
 
 # Page config
 st.set_page_config(
@@ -62,11 +65,12 @@ with col2:
 
 # Prediction result
 if check and email_text.strip():
-    if not model:
-        st.error("🔧 Model file not found or invalid. Please upload 'inbox intelligence model.pkl'.")
+    if not model or not vectorizer:
+        st.error("🔧 Model file not found. Please upload 'inbox intelligence model.pkl'.")
     else:
-        prediction = model.predict([email_text])[0]
-        confidence = max(model.predict_proba([email_text])[0]) * 100
+        input_vector = vectorizer.transform([email_text])
+        prediction = model.predict(input_vector)[0]
+        confidence = max(model.predict_proba(input_vector)[0]) * 100
 
         st.markdown("---")
         if prediction == 1:
