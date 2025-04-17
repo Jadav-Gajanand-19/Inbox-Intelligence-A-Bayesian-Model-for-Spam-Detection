@@ -22,7 +22,7 @@ try:
     model = model_data["model"]
     vectorizer = model_data["vectorizer"]
 except Exception as e:
-    st.error(f"🛠️ Error loading model: {str(e)}")
+    st.error(f"💠 Error loading model: {str(e)}")
 
 # Sidebar
 with st.sidebar:
@@ -78,6 +78,7 @@ st.markdown("""
         font-weight: bold;
         transition: 0.3s ease;
         border-radius: 8px;
+        float: right;
     }
     .stButton button:hover {
         background-color: #ffffff;
@@ -146,7 +147,7 @@ textarea_input = st.text_area("Paste your email content here:", value="" if disa
 if not disable_textarea:
     email_text = textarea_input
 
-analyze_btn = st.button("🔍 Analyze Email", key="analyze_button")
+analyze_btn = st.button("⚙️ Analyze Email", key="analyze_button")
 
 if analyze_btn and model and vectorizer and email_text:
     with st.spinner("Analyzing the email..."):
