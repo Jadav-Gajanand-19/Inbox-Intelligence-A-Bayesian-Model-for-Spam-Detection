@@ -4,7 +4,7 @@ import os
 from PIL import Image
 
 # Load the model and vectorizer
-MODEL_PATH = "inbox intelligence model.pkl"
+MODEL_PATH = "inbox_intelligence_model.pkl"
 model = None
 vectorizer = None
 
