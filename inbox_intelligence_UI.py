@@ -1,4 +1,11 @@
 import streamlit as st
+st.set_page_config(
+    page_title="Inbox Intelligence",
+    page_icon="📬",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
 import joblib
 import os
 import time
@@ -16,14 +23,6 @@ try:
     vectorizer = model_data["vectorizer"]
 except Exception as e:
     st.error(f"🔧 Error loading model: {str(e)}")
-
-# Page config - must be the first Streamlit command
-st.set_page_config(
-    page_title="Inbox Intelligence",
-    page_icon="📬",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
 
 # Sidebar
 with st.sidebar:
@@ -151,11 +150,3 @@ st.markdown("""
     Built with ❤️ by [Your Name]. This is a demo of spam detection using machine learning.
     </div>
 """, unsafe_allow_html=True)
-
-
-    
-
-
-
-
-
