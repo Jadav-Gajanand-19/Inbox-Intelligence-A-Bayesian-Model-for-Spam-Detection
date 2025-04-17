@@ -114,9 +114,11 @@ st.markdown("""
     }
     .spam {
         background-color: #FF4136;
+        border: 2px solid #aa2e25;
     }
     .not-spam {
         background-color: #4CAF50;
+        border: 2px solid #2e7d32;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -185,7 +187,6 @@ if analyze_btn and model and vectorizer and email_text:
                 </script>
             """, height=0)
 
-        st.markdown(f"<h3 style='color:{color}'>{label}</h3>", unsafe_allow_html=True)
         st.markdown("**Confidence Meter**")
         st.markdown(f"""
             <div class="battery-container">
@@ -194,9 +195,9 @@ if analyze_btn and model and vectorizer and email_text:
         """, unsafe_allow_html=True)
 
         if prediction == 1:
-            st.markdown("<div class='feedback-box spam'>🚨 Caution: This email looks like spam!</div>", unsafe_allow_html=True)
+            st.markdown("<div class='feedback-box spam'>🚨 Caution: This email is suspected to be spam.</div>", unsafe_allow_html=True)
         else:
-            st.markdown("<div class='feedback-box not-spam'>✅ This email appears safe.</div>", unsafe_allow_html=True)
+            st.markdown("<div class='feedback-box not-spam'>✅ This email is not suspected to be spam.</div>", unsafe_allow_html=True)
 
 # Optional Footer
 st.markdown("<div class='footer'>Built with 💡 by Gajanand | Inbox Intelligence 2025</div>", unsafe_allow_html=True)
