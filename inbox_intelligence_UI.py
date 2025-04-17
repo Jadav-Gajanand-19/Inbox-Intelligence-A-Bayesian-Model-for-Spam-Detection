@@ -129,14 +129,17 @@ st.markdown("""
 st.markdown("<div class='main-title'>📧 Inbox Intelligence</div>", unsafe_allow_html=True)
 st.markdown("<div class='subtitle'>Smart Spam Detection powered by Naive Bayes</div>", unsafe_allow_html=True)
 
-uploaded_file = st.file_uploader("Browse file", type=["txt", "md"])
+uploaded_file = st.file_uploader("Browse file", type=["txt", "md"], key="file_upload")
 email_text = ""
 
+disable_textarea = uploaded_file is not None
+
+# Display content if file is uploaded
 if uploaded_file is not None:
-    email_text = uploaded_file.read().decode("utf-8")
-    disable_textarea = True
-else:
-    disable_textarea = False
+    file_contents = uploaded_file.read().decode("utf-8")
+    email_text = file_contents
+    st.markdown("### 📄 Email Content")
+    st.code(file_contents, language='markdown')
 
 textarea_input = st.text_area("Paste your email content here:", value="" if disable_textarea else email_text, height=200, key="paste_text", disabled=disable_textarea)
 
@@ -165,10 +168,6 @@ if analyze_btn and model and vectorizer and email_text:
                 <div class="battery-fill" style="background:{color}; width:{confidence}%">{confidence:.2f}%</div>
             </div>
         """, unsafe_allow_html=True)
-
-        if uploaded_file is not None:
-            st.markdown("### 📄 Email Content")
-            st.code(email_text, language='markdown')
 
 # Optional Footer
 st.markdown("<div class='footer'>Built with 💡 by Gajanand | Inbox Intelligence 2025</div>", unsafe_allow_html=True)
