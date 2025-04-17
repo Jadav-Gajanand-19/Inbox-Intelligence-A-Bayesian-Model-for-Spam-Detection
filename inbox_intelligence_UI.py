@@ -113,12 +113,14 @@ st.markdown("""
         text-align: center;
     }
     .spam {
-        background-color: #FF4136;
-        border: 2px solid #aa2e25;
+        background-color: #FFCCCC;
+        color: #b30000;
+        border: 2px solid #ff6666;
     }
     .not-spam {
-        background-color: #4CAF50;
-        border: 2px solid #2e7d32;
+        background-color: #CCFFCC;
+        color: #006600;
+        border: 2px solid #66ff66;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -132,8 +134,6 @@ email_text = ""
 
 if uploaded_file is not None:
     email_text = uploaded_file.read().decode("utf-8")
-    st.markdown("### 📄 Email Content")
-    st.code(email_text, language='markdown')
     disable_textarea = True
 else:
     disable_textarea = False
@@ -151,41 +151,10 @@ if analyze_btn and model and vectorizer and email_text:
         label = "Spam" if prediction == 1 else "Not Spam"
         color = "#FF4136" if prediction == 1 else "#4CAF50"
 
-        if prediction == 0:
-            components.html("""
-                <script>
-                    for (let i = 0; i < 100; i++) {
-                        const snowflake = document.createElement('div');
-                        snowflake.textContent = "❄️";
-                        snowflake.style.position = 'fixed';
-                        snowflake.style.left = Math.random() * 100 + 'vw';
-                        snowflake.style.animation = 'fall 3s linear forwards';
-                        snowflake.style.top = 0;
-                        snowflake.style.fontSize = '24px';
-                        snowflake.style.zIndex = 1000;
-                        document.body.appendChild(snowflake);
-                        setTimeout(() => snowflake.remove(), 3000);
-                    }
-                </script>
-            """, height=0)
+        if prediction == 1:
+            st.markdown("<div class='feedback-box spam'>🚨 Caution: This email is suspected to be spam.</div>", unsafe_allow_html=True)
         else:
-            components.html("""
-                <script>
-                    for (let i = 0; i < 20; i++) {
-                        setTimeout(() => {
-                            const bomb = document.createElement('div');
-                            bomb.textContent = "💥";
-                            bomb.style.position = 'fixed';
-                            bomb.style.left = Math.random() * 100 + 'vw';
-                            bomb.style.top = Math.random() * 100 + 'vh';
-                            bomb.style.fontSize = '36px';
-                            bomb.style.zIndex = 9999;
-                            document.body.appendChild(bomb);
-                            setTimeout(() => bomb.remove(), 1500);
-                        }, i * 100);
-                    }
-                </script>
-            """, height=0)
+            st.markdown("<div class='feedback-box not-spam'>✅ This email is not suspected to be spam.</div>", unsafe_allow_html=True)
 
         st.markdown("**Confidence Meter**")
         st.markdown(f"""
@@ -194,10 +163,9 @@ if analyze_btn and model and vectorizer and email_text:
             </div>
         """, unsafe_allow_html=True)
 
-        if prediction == 1:
-            st.markdown("<div class='feedback-box spam'>🚨 Caution: This email is suspected to be spam.</div>", unsafe_allow_html=True)
-        else:
-            st.markdown("<div class='feedback-box not-spam'>✅ This email is not suspected to be spam.</div>", unsafe_allow_html=True)
+        if uploaded_file is not None:
+            st.markdown("### 📄 Email Content")
+            st.code(email_text, language='markdown')
 
 # Optional Footer
 st.markdown("<div class='footer'>Built with 💡 by Gajanand | Inbox Intelligence 2025</div>", unsafe_allow_html=True)
