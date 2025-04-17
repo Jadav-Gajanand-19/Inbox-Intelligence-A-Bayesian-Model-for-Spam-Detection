@@ -60,6 +60,23 @@ st.markdown("---")
 if "preset_email" not in st.session_state:
     st.session_state["preset_email"] = ""
 
+if "load_non_spam" not in st.session_state:
+    st.session_state["load_non_spam"] = False
+
+if "load_spam" not in st.session_state:
+    st.session_state["load_spam"] = False
+
+# Load sample if flag set
+if st.session_state["load_non_spam"]:
+    st.session_state["preset_email"] = "Subject: Meeting Reminder\nBody: Don’t forget our 10AM sync tomorrow."
+    st.session_state["load_non_spam"] = False
+    st.experimental_rerun()
+
+if st.session_state["load_spam"]:
+    st.session_state["preset_email"] = "Subject: You won a prize!\nBody: Click here to claim your $10,000 now!"
+    st.session_state["load_spam"] = False
+    st.experimental_rerun()
+
 # Use preset_email for text area
 st.subheader("✉️ Paste Your Email Message Below")
 email_text = st.text_area(
@@ -101,12 +118,10 @@ with st.expander("🔍 Show Sample Emails"):
     col1, col2 = st.columns(2)
     with col1:
         if st.button("🏆 Non-Spam Example"):
-            st.session_state["preset_email"] = "Subject: Meeting Reminder\nBody: Don’t forget our 10AM sync tomorrow."
-            st.experimental_rerun()
+            st.session_state["load_non_spam"] = True
     with col2:
         if st.button("💸 Spam Example"):
-            st.session_state["preset_email"] = "Subject: You won a prize!\nBody: Click here to claim your $10,000 now!"
-            st.experimental_rerun()
+            st.session_state["load_spam"] = True
 
 # Footer
 st.markdown("""
@@ -114,6 +129,7 @@ st.markdown("""
     Built with ❤️ by [Your Name]. This is a demo of spam detection using machine learning.
     </div>
 """, unsafe_allow_html=True)
+
 
 
 
