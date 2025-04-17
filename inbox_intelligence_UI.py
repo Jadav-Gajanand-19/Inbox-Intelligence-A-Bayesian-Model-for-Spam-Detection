@@ -140,7 +140,7 @@ else:
 
 email_text = st.text_area("Paste your email content here:", value=email_text if not disable_textarea else "", height=200, key="paste_text", disabled=disable_textarea)
 
-analyze_btn = st.button("🔍 Analyze Email", key="analyze_button")
+analyze_btn = st.button("🔄 Analyze Email", key="analyze_button")
 
 if analyze_btn and model and vectorizer and email_text:
     with st.spinner("Analyzing the email..."):
@@ -152,28 +152,38 @@ if analyze_btn and model and vectorizer and email_text:
         color = "#FF4136" if prediction == 1 else "#4CAF50"
 
         if prediction == 0:
-            st.snow()
+            components.html("""
+                <script>
+                    for (let i = 0; i < 100; i++) {
+                        const snowflake = document.createElement('div');
+                        snowflake.textContent = "❄️";
+                        snowflake.style.position = 'fixed';
+                        snowflake.style.left = Math.random() * 100 + 'vw';
+                        snowflake.style.animation = 'fall 3s linear forwards';
+                        snowflake.style.top = 0;
+                        snowflake.style.fontSize = '24px';
+                        snowflake.style.zIndex = 1000;
+                        document.body.appendChild(snowflake);
+                        setTimeout(() => snowflake.remove(), 3000);
+                    }
+                </script>
+            """, height=0)
         else:
             components.html("""
                 <script>
-                    const canvas = document.createElement('canvas');
-                    canvas.style.position = 'fixed';
-                    canvas.style.top = '0';
-                    canvas.style.left = '0';
-                    canvas.style.zIndex = '9999';
-                    canvas.width = window.innerWidth;
-                    canvas.height = window.innerHeight;
-                    document.body.appendChild(canvas);
-                    const ctx = canvas.getContext('2d');
                     for (let i = 0; i < 20; i++) {
                         setTimeout(() => {
-                            ctx.beginPath();
-                            ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, 30, 0, 2 * Math.PI);
-                            ctx.fillStyle = 'red';
-                            ctx.fill();
+                            const bomb = document.createElement('div');
+                            bomb.textContent = "💣";
+                            bomb.style.position = 'fixed';
+                            bomb.style.left = Math.random() * 100 + 'vw';
+                            bomb.style.top = Math.random() * 100 + 'vh';
+                            bomb.style.fontSize = '36px';
+                            bomb.style.zIndex = 9999;
+                            document.body.appendChild(bomb);
+                            setTimeout(() => bomb.remove(), 1500);
                         }, i * 100);
                     }
-                    setTimeout(() => canvas.remove(), 2500);
                 </script>
             """, height=0)
 
