@@ -122,27 +122,25 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Snow and balloon animations
-st.snow()
-
+# Header content
 st.markdown("<div class='main-title'>📧 Inbox Intelligence</div>", unsafe_allow_html=True)
 st.markdown("<div class='subtitle'>Smart Spam Detection powered by Naive Bayes</div>", unsafe_allow_html=True)
 
 # --- Input Options ---
-input_option = st.radio("Choose input method:", ("📤 Browse Email File", "✍️ Paste Email Text"))
+input_option = st.radio("Choose input method:", ("📤 Browse Email File", "✍️ Paste Email Text"), key="input_option")
 
 email_text = ""
 uploaded_file = None
 
 if input_option == "📤 Browse Email File":
-    uploaded_file = st.file_uploader("Upload a .txt file containing the email:", type=["txt"])
+    uploaded_file = st.file_uploader("Upload a .txt file containing the email:", type=["txt"], key="uploader")
     if uploaded_file:
         email_text = uploaded_file.read().decode("utf-8")
-        st.text_area("Email Content", email_text, height=200, disabled=True)
+        st.text_area("Email Content", email_text, height=200, disabled=True, key="file_text")
 else:
-    email_text = st.text_area("Paste your email content here:", height=200)
+    email_text = st.text_area("Paste your email content here:", height=200, key="paste_text")
 
-if st.button("Analyze Email") and model and vectorizer and email_text:
+if st.button("Analyze Email", key="analyze_button") and model and vectorizer and email_text:
     with st.spinner("Analyzing the email..."):
         transformed = vectorizer.transform([email_text])
         prediction = model.predict(transformed)[0]
@@ -150,7 +148,31 @@ if st.button("Analyze Email") and model and vectorizer and email_text:
         label = "Spam" if prediction == 1 else "Not Spam"
         color = "#FF4136" if prediction == 1 else "#4CAF50"
 
-        st.balloons() if prediction == 0 else st.snow()
+        if prediction == 0:
+            st.snow()
+        else:
+            components.html("""
+                <script>
+                    const canvas = document.createElement('canvas');
+                    canvas.style.position = 'fixed';
+                    canvas.style.top = '0';
+                    canvas.style.left = '0';
+                    canvas.style.zIndex = '9999';
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight;
+                    document.body.appendChild(canvas);
+                    const ctx = canvas.getContext('2d');
+                    for (let i = 0; i < 20; i++) {
+                        setTimeout(() => {
+                            ctx.beginPath();
+                            ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, 30, 0, 2 * Math.PI);
+                            ctx.fillStyle = 'red';
+                            ctx.fill();
+                        }, i * 100);
+                    }
+                    setTimeout(() => canvas.remove(), 2500);
+                </script>
+            """, height=0)
 
         st.markdown(f"<h3 style='color:{color}; animation: blink 1s infinite'>{label}</h3>", unsafe_allow_html=True)
         st.markdown("**Confidence Meter**")
@@ -170,7 +192,7 @@ if st.button("Analyze Email") and model and vectorizer and email_text:
                 "<div class='caution-animated not-spam'>✅ This email appears safe.</div>",
                 unsafe_allow_html=True
             )
-elif st.button("Analyze Email") and not email_text:
+elif st.button("Analyze Email", key="analyze_button_empty") and not email_text:
     st.warning("Please provide email content to analyze.")
 
 # Optional Footer
