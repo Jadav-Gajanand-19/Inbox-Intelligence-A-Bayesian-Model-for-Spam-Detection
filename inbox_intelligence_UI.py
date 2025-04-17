@@ -1,7 +1,7 @@
 import streamlit as st
 st.set_page_config(
     page_title="Inbox Intelligence",
-    page_icon="/mnt/data/A_2D_digital_graphic_logo_design_displays_the_bran.png",
+    page_icon="https://raw.githubusercontent.com/Jadav-Gajanand-19/Inbox-Intelligence-A-Bayesian-Model-for-Spam-Detection/main/inbox_intelligence_logo.png",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -26,7 +26,7 @@ except Exception as e:
 
 # Sidebar
 with st.sidebar:
-    st.image("/mnt/data/A_2D_digital_graphic_logo_design_displays_the_bran.png", width=100)
+    st.image("https://raw.githubusercontent.com/Jadav-Gajanand-19/Inbox-Intelligence-A-Bayesian-Model-for-Spam-Detection/main/inbox_intelligence_logo.png", width=100)
     st.title("📧 Inbox Intelligence")
     st.markdown("Detect spam messages with machine learning magic.")
     st.markdown("---")
