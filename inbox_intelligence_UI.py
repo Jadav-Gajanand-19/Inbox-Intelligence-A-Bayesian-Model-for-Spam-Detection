@@ -41,11 +41,11 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("Developed with 💡 using Naive Bayes and Streamlit.")
 
-# Header with animation and custom background
+# Header with animation
 st.markdown("""
     <style>
     body {
-        background: linear-gradient(135deg, #e0f7fa 0%, #ffffff 100%);
+        background: linear-gradient(135deg, #833AB4, #ffffff);
     }
     .main-title {
         font-size: 48px;
@@ -65,9 +65,9 @@ st.markdown("""
         animation: fadeIn 4s ease-in-out;
     }
     .stButton button {
-        border: 2px solid #0077b6;
-        background-color: #caf0f8;
-        color: #03045e;
+        border: 2px solid #833AB4;
+        background-color: white;
+        color: #833AB4;
         padding: 0.5em 1em;
         font-size: 16px;
         font-weight: bold;
@@ -75,7 +75,7 @@ st.markdown("""
         border-radius: 8px;
     }
     .stButton button:hover {
-        background-color: #0077b6;
+        background-color: #833AB4;
         color: white;
     }
     @keyframes fadeIn {
