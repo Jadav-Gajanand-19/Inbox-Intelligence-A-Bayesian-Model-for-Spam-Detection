@@ -15,7 +15,7 @@ try:
 except Exception as e:
     st.error(f"🔧 Error loading model: {str(e)}")
 
-# Page config
+# Page config - must be the first Streamlit command
 st.set_page_config(
     page_title="Inbox Intelligence",
     page_icon="📬",
@@ -113,7 +113,8 @@ st.markdown("""
     <div class='footer'>
     Built with ❤️ by [Your Name]. This is a demo of spam detection using machine learning.
     </div>
-""", unsafe_allow_html=True))
+""", unsafe_allow_html=True)
+
 
 
 
