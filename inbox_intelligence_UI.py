@@ -111,6 +111,19 @@ st.markdown("<div class='subtitle'>Smart Spam Detection powered by Naive Bayes</
 
 st.markdown("---")
 
+# File upload feature
+st.subheader("📎 Or Upload an Email File (.txt)")
+uploaded_file = st.file_uploader("Choose a .txt file", type=["txt"])
+file_email_text = None
+
+if uploaded_file is not None:
+    try:
+        file_email_text = uploaded_file.read().decode("utf-8")
+        st.success("✅ File uploaded successfully!")
+        st.text_area("📩 Email Content from File", file_email_text, height=150, disabled=True)
+    except Exception as e:
+        st.error(f"❌ Error reading file: {str(e)}")
+
 # Input area
 st.subheader("✉️ Paste Your Email Message Below")
 email_text = st.text_area(
@@ -119,6 +132,9 @@ email_text = st.text_area(
     placeholder="Subject: Hello\nBody: This is a test message...",
     key="email_input"
 )
+
+if uploaded_file is not None and file_email_text:
+    email_text = file_email_text
 
 # Check button
 col1, col2 = st.columns([3, 1])
@@ -147,6 +163,7 @@ if check and email_text.strip():
                         </div>
                     </div>
                 """.format(confidence, confidence), unsafe_allow_html=True)
+                st.markdown("Confidence Meter :")
                 st.markdown("""
                     <div class='caution-animated spam'>⚠️ WARNING: SPAM Detected! ⚠️</div>
                 """, unsafe_allow_html=True)
