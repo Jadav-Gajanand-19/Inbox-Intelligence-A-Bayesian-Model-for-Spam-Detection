@@ -1,7 +1,7 @@
 import streamlit as st
 st.set_page_config(
     page_title="Inbox Intelligence",
-    page_icon="📨",
+    page_icon="📧",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -26,8 +26,8 @@ except Exception as e:
 
 # Sidebar
 with st.sidebar:
-    st.image("https://cdn-icons-png.flaticon.com/512/561/561188.png", width=100)
-    st.title("📨 Inbox Intelligence")
+    st.image("https://cdn-icons-png.flaticon.com/512/3178/3178283.png", width=100)
+    st.title("📧 Inbox Intelligence")
     st.markdown("Detect spam messages with machine learning magic.")
     st.markdown("---")
     st.markdown("### 🔍 What does it do?")
@@ -39,13 +39,17 @@ with st.sidebar:
     st.markdown("### 💬 Example Uses")
     st.markdown("- Check suspicious emails\n- Test your spam filters\n- Educational demo for ML beginners")
     st.markdown("---")
+    st.markdown("### 📚 More Info")
+    st.markdown("Naive Bayes is a probabilistic classifier based on Bayes' Theorem. It's fast, efficient, and often used for spam detection.")
+    st.markdown("Learn more about it [here](https://en.wikipedia.org/wiki/Naive_Bayes_classifier).")
+    st.markdown("---")
     st.markdown("Developed with 💡 using Naive Bayes and Streamlit.")
 
 # Header with animation
 st.markdown("""
     <style>
     body {
-        background: linear-gradient(135deg, #833AB4, #ffffff);
+        background: linear-gradient(to right, #833AB4, #ffffff);
     }
     .main-title {
         font-size: 48px;
@@ -118,7 +122,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.markdown("<div class='main-title'>📨 Inbox Intelligence</div>", unsafe_allow_html=True)
+st.markdown("<div class='main-title'>📧 Inbox Intelligence</div>", unsafe_allow_html=True)
 st.markdown("<div class='subtitle'>Smart Spam Detection powered by Naive Bayes</div>", unsafe_allow_html=True)
 
 st.markdown("---")
