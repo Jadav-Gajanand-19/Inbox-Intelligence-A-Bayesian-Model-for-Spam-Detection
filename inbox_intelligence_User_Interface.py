@@ -12,40 +12,6 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Floating About Developer Button with Fade-In
-st.markdown("""
-    <style>
-    .about-dev-btn {
-        position: fixed;
-        top: 15px;
-        right: 20px;
-        background-color: #6a1b9a;
-        color: white;
-        padding: 8px 16px;
-        font-size: 14px;
-        font-weight: bold;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        z-index: 9999;
-        box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
-        opacity: 0;
-        animation: fadeIn 1.5s ease-in-out forwards;
-    }
-    .about-dev-btn:hover {
-        background-color: #833AB4;
-    }
-    @keyframes fadeIn {
-        to {
-            opacity: 1;
-        }
-    }
-    </style>
-    <button class="about-dev-btn" onclick="window.open('https://www.aiip.in/profile/j.gajanand1123', '_blank')">
-        👨‍💻 About Developer
-    </button>
-""", unsafe_allow_html=True)
-
 # Load model
 MODEL_PATH = "inbox_intelligence_model.pkl"
 model = None
