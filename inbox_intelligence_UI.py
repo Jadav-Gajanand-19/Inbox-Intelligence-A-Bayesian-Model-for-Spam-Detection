@@ -1,7 +1,7 @@
 import streamlit as st
 st.set_page_config(
     page_title="Inbox Intelligence",
-    page_icon="📬",
+    page_icon="📨",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -22,15 +22,15 @@ try:
     model = model_data["model"]
     vectorizer = model_data["vectorizer"]
 except Exception as e:
-    st.error(f"🔧 Error loading model: {str(e)}")
+    st.error(f"🛠️ Error loading model: {str(e)}")
 
 # Sidebar
 with st.sidebar:
     st.image("https://cdn-icons-png.flaticon.com/512/561/561188.png", width=100)
-    st.title("📬 Inbox Intelligence")
+    st.title("📨 Inbox Intelligence")
     st.markdown("Detect spam messages with machine learning magic.")
     st.markdown("---")
-    st.markdown("Developed with ❤️ using Naive Bayes and Streamlit.")
+    st.markdown("Developed with 💡 using Naive Bayes and Streamlit.")
 
 # Header with animation
 st.markdown("""
@@ -106,18 +106,18 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.markdown("<div class='main-title'>📥 Inbox Intelligence</div>", unsafe_allow_html=True)
+st.markdown("<div class='main-title'>📨 Inbox Intelligence</div>", unsafe_allow_html=True)
 st.markdown("<div class='subtitle'>Smart Spam Detection powered by Naive Bayes</div>", unsafe_allow_html=True)
 
 st.markdown("---")
 
 # File upload first
-st.subheader("📌 Upload an Email File (.txt)")
+st.subheader("📎 Upload an Email File (.txt)")
 uploaded_file = st.file_uploader("Choose a .txt file", type=["txt"])
 file_email_text = None
 
 # Input area disabled based on file upload
-st.subheader("✉️ Or Paste Your Email Message Below")
+st.subheader("📝 Or Paste Your Email Message Below")
 disable_text_input = uploaded_file is not None
 email_text = st.text_area(
     "",
@@ -130,10 +130,10 @@ email_text = st.text_area(
 if uploaded_file is not None:
     try:
         file_email_text = uploaded_file.read().decode("utf-8")
-        st.success("✅ File uploaded successfully!")
-        st.text_area("📩 Email Content from File", file_email_text, height=150, disabled=True)
+        st.success("📁 File uploaded successfully!")
+        st.text_area("📄 Email Content from File", file_email_text, height=150, disabled=True)
     except Exception as e:
-        st.error(f"❌ Error reading file: {str(e)}")
+        st.error(f"❗ Error reading file: {str(e)}")
 
 if uploaded_file is not None and file_email_text:
     email_text = file_email_text
@@ -141,15 +141,15 @@ if uploaded_file is not None and file_email_text:
 # Check button
 col1, col2 = st.columns([3, 1])
 with col2:
-    check = st.button("🚀 Check Spam", use_container_width=True)
+    check = st.button("🔍 Check Spam", use_container_width=True)
 
 # Prediction result
 if check and email_text.strip():
     if model is None or vectorizer is None:
-        st.error("🔧 Model or vectorizer not loaded properly.")
+        st.error("🛠️ Model or vectorizer not loaded properly.")
     else:
         try:
-            with st.spinner("Analyzing message..."):
+            with st.spinner("🔎 Analyzing message..."):
                 time.sleep(1.5)
                 input_vector = vectorizer.transform([email_text])
                 prediction = model.predict(input_vector)[0]
@@ -158,41 +158,41 @@ if check and email_text.strip():
             st.markdown("---")
             if prediction == 1:
                 st.error(f"🚨 This email is classified as **SPAM**.")
-                st.markdown("Confidence Meter :")
-                st.markdown("""
+                st.markdown("**Confidence Meter :**")
+                st.markdown(f"""
                     <div class='battery-container'>
-                        <div class='battery-fill' style='width: {:.2f}%; background: #ff4d4f;'>
-                            {:.2f}%
+                        <div class='battery-fill' style='width: {confidence:.2f}%; background: #ff4d4f;'>
+                            {confidence:.2f}%
                         </div>
                     </div>
-                """.format(confidence, confidence), unsafe_allow_html=True)
+                """, unsafe_allow_html=True)
                 st.markdown("""
-                    <div class='caution-animated spam'>⚠️ WARNING: SPAM Detected! ⚠️</div>
+                    <div class='caution-animated spam'>🚨 Caution! SPAM Detected 🚨</div>
                 """, unsafe_allow_html=True)
                 st.balloons()
             else:
                 st.success(f"✅ This email is **NOT SPAM**.")
-                st.markdown("Confidence Meter :")
-                st.markdown("""
+                st.markdown("**Confidence Meter :**")
+                st.markdown(f"""
                     <div class='battery-container'>
-                        <div class='battery-fill' style='width: {:.2f}%; background: #4caf50;'>
-                            {:.2f}%
+                        <div class='battery-fill' style='width: {confidence:.2f}%; background: #4caf50;'>
+                            {confidence:.2f}%
                         </div>
                     </div>
-                """.format(confidence, confidence), unsafe_allow_html=True)
+                """, unsafe_allow_html=True)
                 st.markdown("""
-                    <div class='caution-animated not-spam'>✅ All clear: Not Spam!</div>
+                    <div class='caution-animated not-spam'>🟢 Looks Good: Not Spam!</div>
                 """, unsafe_allow_html=True)
                 st.snow()
 
             st.markdown("---")
             st.info("You can modify the email and re-check instantly.")
         except Exception as e:
-            st.error(f"❌ Prediction failed: {str(e)}")
+            st.error(f"❗ Prediction failed: {str(e)}")
 
 # Footer
 st.markdown("""
     <div class='footer'>
-    Built with ❤️ by Gajanand. This is a demo of spam detection using machine learning.
+    Built with 💡 by Gajanand. This is a demo of spam detection using machine learning.
     </div>
 """, unsafe_allow_html=True)
