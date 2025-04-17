@@ -45,14 +45,15 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("Developed with 💡 using Naive Bayes and Streamlit.")
 
-# Header with animation and dark theme style
+# Header with gradient animation and dark theme style
 st.markdown("""
     <style>
     body {
-       # background: linear-gradient(to right, #121212, #2c2c2c);
-       # color: #ffffff;
-        background: #833AB4;
-        background: linear-gradient(90deg, rgba(131, 58, 180, 1) 0%, rgba(253, 29, 29, 1) 50%, rgba(252, 176, 69, 1) 100%);
+        background: linear-gradient(to right, #121212, #2c2c2c);
+        color: #ffffff;
+    }
+    .stApp {
+        background: linear-gradient(135deg, #121212 0%, #2c2c2c 100%) !important;
     }
     .main-title {
         font-size: 48px;
@@ -73,7 +74,7 @@ st.markdown("""
     }
     .stButton button {
         border: 2px solid #833AB4;
-        background-color: white;
+        background-color: #1f1f1f;
         color: #833AB4;
         padding: 0.5em 1em;
         font-size: 16px;
