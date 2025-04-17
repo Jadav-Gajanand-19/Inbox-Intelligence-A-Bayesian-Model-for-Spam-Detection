@@ -70,11 +70,6 @@ st.markdown("""
         0% { opacity: 0; transform: translateY(-10px); }
         100% { opacity: 1; transform: translateY(0); }
     }
-    @keyframes pulse {
-        0% { transform: scale(1); opacity: 1; }
-        50% { transform: scale(1.1); opacity: 0.8; }
-        100% { transform: scale(1); opacity: 1; }
-    }
     @keyframes blink {
         0%, 100% { opacity: 1; }
         50% { opacity: 0; }
@@ -99,9 +94,14 @@ st.markdown("""
     .caution-animated {
         animation: blink 1s ease-in-out infinite;
         font-size: 26px;
-        color: #FF4136;
         font-weight: bold;
         text-align: center;
+    }
+    .spam {
+        color: #FF4136;
+    }
+    .not-spam {
+        color: #4CAF50;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -148,11 +148,12 @@ if check and email_text.strip():
                     </div>
                 """.format(confidence, confidence), unsafe_allow_html=True)
                 st.markdown("""
-                    <div class='caution-animated'>⚠️ WARNING: SPAM Detected! ⚠️</div>
+                    <div class='caution-animated spam'>⚠️ WARNING: SPAM Detected! ⚠️</div>
                 """, unsafe_allow_html=True)
                 st.balloons()
             else:
                 st.success(f"✅ This email is **NOT SPAM**.")
+                st.markdown("Confidence Meter :")
                 st.markdown("""
                     <div class='battery-container'>
                         <div class='battery-fill' style='width: {:.2f}%; background: #4caf50;'>
@@ -161,9 +162,7 @@ if check and email_text.strip():
                     </div>
                 """.format(confidence, confidence), unsafe_allow_html=True)
                 st.markdown("""
-                    <div style="animation: fadeIn 2s ease-in-out; font-size: 24px; color: #4CAF50;">
-                        🎉 Looks safe and clean!
-                    </div>
+                    <div class='caution-animated not-spam'>✅ All clear: Not Spam!</div>
                 """, unsafe_allow_html=True)
                 st.snow()
 
@@ -175,6 +174,6 @@ if check and email_text.strip():
 # Footer
 st.markdown("""
     <div class='footer'>
-    Built with ❤️ by [Your Name]. This is a demo of spam detection using machine learning.
+    Built with ❤️ by Gajanand. This is a demo of spam detection using machine learning.
     </div>
 """, unsafe_allow_html=True)
