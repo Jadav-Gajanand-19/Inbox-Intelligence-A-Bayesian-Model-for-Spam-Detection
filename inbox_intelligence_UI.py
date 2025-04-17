@@ -3,7 +3,7 @@ import joblib
 import os
 from PIL import Image
 
-# Page config MUST be the first Streamlit command
+# Page config - MUST BE FIRST
 st.set_page_config(
     page_title="Inbox Intelligence",
     page_icon="📬",
@@ -12,20 +12,16 @@ st.set_page_config(
 )
 
 # Load the model and vectorizer
-MODEL_PATH = "inbox intelligence model.pkl"
+MODEL_PATH = "inbox_intelligence_model.pkl"
 model = None
 vectorizer = None
 
 try:
     model_data = joblib.load(MODEL_PATH)
-    if isinstance(model_data, dict):
-        model = model_data.get("model")
-        vectorizer = model_data.get("vectorizer")
-    else:
-        st.warning("Model file does not contain a dictionary. Attempting to load model directly.")
-        model = model_data
+    model = model_data["model"]
+    vectorizer = model_data["vectorizer"]
 except Exception as e:
-    st.error(f"🔧 Error loading model: {str(e)}")
+    st.error(f"🔧 Error loading model or vectorizer: {str(e)}")
 
 # Sidebar
 with st.sidebar:
