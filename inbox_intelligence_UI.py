@@ -123,6 +123,23 @@ st.markdown("""
         color: #006600;
         border: 2px solid #66ff66;
     }
+    .blur {
+        filter: blur(4px);
+        pointer-events: none;
+    }
+    .overlay-msg {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(255, 255, 255, 0.9);
+        padding: 20px 40px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+        font-size: 20px;
+        font-weight: bold;
+        z-index: 9999;
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -135,14 +152,15 @@ email_text = ""
 
 disable_textarea = uploaded_file is not None
 
-# Display content if file is uploaded
 if uploaded_file is not None:
     file_contents = uploaded_file.read().decode("utf-8")
     email_text = file_contents
     st.markdown("### 📄 Email Content")
     st.code(file_contents, language='markdown')
 
-textarea_input = st.text_area("Paste your email content here:", value="" if disable_textarea else email_text, height=200, key="paste_text", disabled=disable_textarea)
+container = st.container()
+with container:
+    textarea_input = st.text_area("Paste your email content here:", value="" if disable_textarea else email_text, height=200, key="paste_text", disabled=disable_textarea)
 
 if not disable_textarea:
     email_text = textarea_input
@@ -151,7 +169,17 @@ analyze_btn = st.button("⚙️ Analyze Email", key="analyze_button")
 
 if analyze_btn and model and vectorizer and email_text:
     with st.spinner("Analyzing the email..."):
+        container.markdown("""
+            <div class='blur'>
+        """, unsafe_allow_html=True)
+        analyzing_placeholder = st.empty()
+        analyzing_placeholder.markdown("<div class='overlay-msg'>Analyzing Email...</div>", unsafe_allow_html=True)
         time.sleep(2.5)
+        analyzing_placeholder.empty()
+        container.markdown("""
+            </div>
+        """, unsafe_allow_html=True)
+
         transformed = vectorizer.transform([email_text])
         prediction = model.predict(transformed)[0]
         confidence = max(model.predict_proba(transformed)[0]) * 100
@@ -170,5 +198,4 @@ if analyze_btn and model and vectorizer and email_text:
             </div>
         """, unsafe_allow_html=True)
 
-# Optional Footer
 st.markdown("<div class='footer'>Built with 💡 by Gajanand | Inbox Intelligence 2025</div>", unsafe_allow_html=True)
