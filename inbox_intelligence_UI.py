@@ -5,11 +5,15 @@ from PIL import Image
 
 # Load the model and vectorizer
 MODEL_PATH = "inbox intelligence model.pkl"
-if os.path.exists(MODEL_PATH):
+model = None
+vectorizer = None
+
+try:
     model_data = joblib.load(MODEL_PATH)
-else:
-    model = None
-    vectorizer = None
+    model = model_data.get("model")
+    vectorizer = model_data.get("vectorizer")
+except Exception as e:
+    st.error(f"🔧 Error loading model: {str(e)}")
 
 # Page config
 st.set_page_config(
@@ -54,7 +58,7 @@ st.markdown("---")
 
 # Email input
 st.subheader("✉️ Paste Your Email Message Below")
-email_text = st.text_area("", height=200, placeholder="Subject: Hello\nBody: This is a test message...")
+email_text = st.text_area("", height=200, placeholder="Subject: Hello\nBody: This is a test message...", key="email_input")
 
 # Check button
 col1, col2 = st.columns([3, 1])
@@ -63,31 +67,34 @@ with col2:
 
 # Prediction result
 if check and email_text.strip():
-    if not model or not vectorizer:
-        st.error("🔧 Model file not found. Please upload 'inbox intelligence model.pkl'.")
+    if model is None or vectorizer is None:
+        st.error("🔧 Model or vectorizer not loaded properly.")
     else:
-        input_vector = vectorizer.transform([email_text])
-        prediction = model.predict(input_vector)[0]
-        confidence = max(model.predict_proba(input_vector)[0]) * 100
+        try:
+            input_vector = vectorizer.transform([email_text])
+            prediction = model.predict(input_vector)[0]
+            confidence = max(model.predict_proba(input_vector)[0]) * 100
 
-        st.markdown("---")
-        if prediction == 1:
-            st.error(f"🚨 This email is classified as **SPAM** with {confidence:.2f}% confidence.")
-        else:
-            st.success(f"✅ This email is **NOT SPAM** with {confidence:.2f}% confidence.")
+            st.markdown("---")
+            if prediction == 1:
+                st.error(f"🚨 This email is classified as **SPAM** with {confidence:.2f}% confidence.")
+            else:
+                st.success(f"✅ This email is **NOT SPAM** with {confidence:.2f}% confidence.")
 
-        st.markdown("---")
-        st.info("You can modify the email and re-check instantly.")
+            st.markdown("---")
+            st.info("You can modify the email and re-check instantly.")
+        except Exception as e:
+            st.error(f"❌ Prediction failed: {str(e)}")
 
 # Example emails
 with st.expander("🔍 Show Sample Emails"):
     col1, col2 = st.columns(2)
     with col1:
         if st.button("🏆 Non-Spam Example"):
-            st.session_state["email_text"] = "Subject: Meeting Reminder\nBody: Don’t forget our 10AM sync tomorrow."
+            st.session_state["email_input"] = "Subject: Meeting Reminder\nBody: Don’t forget our 10AM sync tomorrow."
     with col2:
         if st.button("💸 Spam Example"):
-            st.session_state["email_text"] = "Subject: You won a prize!\nBody: Click here to claim your $10,000 now!"
+            st.session_state["email_input"] = "Subject: You won a prize!\nBody: Click here to claim your $10,000 now!"
 
 # Footer
 st.markdown("""
@@ -96,9 +103,5 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# Retain text on reload
-if "email_text" in st.session_state:
-    email_text = st.session_state["email_text"]
-    st.text_area("", value=email_text, height=200, key="email_text_display")
 
 
